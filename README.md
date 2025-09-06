@@ -8,7 +8,7 @@ I haven't had a chance to test these honeypot(s) out in the wild yet, but from m
 I also plan on adding a golang password util to work alongside these honeypots since the general idea for offensive is to build
 wordlists from the scanners/bots that attack the honeypots which is what I did a long time ago when I ran cowrie for 3 months.
 
-Ussuri are a type of bear and you can learn more about them here: https://en.wikipedia.org/wiki/Ussuri
+Ussuri are a type of bear and you can learn more about them here: https://en.wikipedia.org/wiki/Ussuri_brown_bear
 
 I thought it was fitting to name this repository after a bear because of honey and the stereotype that bears like honey which is mostly true.
 
@@ -16,7 +16,7 @@ I thought it was fitting to name this repository after a bear because of honey a
 
 ### SSH Honeypot:
 
-This is a pretty simple go program and it takes config file in YAML format. I've included an example, but I couldn't figure out how to change the banner using the library. The example from `openssh.yaml`:
+This is a pretty simple go program and it takes config file in YAML format. I've included an example, but I couldn't figure out how to change the banner using the library so I ended up using the config file idea so any SSH version/banner could be used to help blend in more. The example from `openssh.yaml`:
 
 ```yaml
 
