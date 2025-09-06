@@ -58,7 +58,7 @@ Usage of ./ssh-honeypot:
 To compile and run:
 
 ```bash
-go build
+cd ssh-honeypot && go build
 ./ssh-honeypot -f openssh.yaml -o test-ssh.json
 ```
 
