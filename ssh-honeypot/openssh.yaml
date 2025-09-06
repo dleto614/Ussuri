@@ -1,0 +1,10 @@
+ssh-proto:
+  version: "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.2"
+
+server:
+  server: 127.0.0.1
+  port: "2222"
+
+  keys:
+    private: "id_rsa"
+    public: "id_rsa.pub"
