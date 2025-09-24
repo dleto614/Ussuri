@@ -74,7 +74,7 @@ medusa -M ssh -h 127.0.0.1 -n 2222 -P test-wordlists/password.txt -U test-wordli
 
 ------
 
-### FTP Honeypot"
+### FTP Honeypot:
 
 This is the same as the ssh honeypot above with the same yaml config file. I have an example `ftp.yaml`:
 
