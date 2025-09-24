@@ -126,7 +126,7 @@ Usage:
 
 Future plans:
 
-~~- Write FTP honeypot~~ Done!
+- ~~Write FTP honeypot~~ Done!
 - Write honeypots for various databases
 - Write honeypot for SMB
 - Write the password util
