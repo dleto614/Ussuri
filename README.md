@@ -74,9 +74,59 @@ medusa -M ssh -h 127.0.0.1 -n 2222 -P test-wordlists/password.txt -U test-wordli
 
 ------
 
+### FTP Honeypot"
+
+This is the same as the ssh honeypot above with the same yaml config file. I have an example `ftp.yaml`:
+
+```yaml
+ftp-proto:
+  version: "FTP-1.0"
+  banner: "220 Welcome to My FTP Honeypot Server"
+
+server:
+  address: "0.0.0.0"
+  port: "2121"
+
+```
+
+------
+
+To compile and run:
+
+```bash
+cd ftp-honeypot && go build
+./ftp-honeypot -f ftp.yaml -o test-ftp.json
+```
+
+------
+
+In my local testing I've used medusa and small wordlists in `test-wordlists` directory.
+
+Medusa command:
+
+```bash
+medusa -M ftp -h 127.0.0.1 -n 2121 -U test-wordlists/username.txt -P test-wordlists/password.txt 
+```
+
+------
+
+Usage:
+
+```bash
+Usage:
+  -f string
+        Specify config yaml file
+  -l string
+        Specify log file to save results in as a text file
+  -o string
+        Specify log file to save results in as json
+```
+
+------
+
 Future plans:
 
-- Write FTP honeypot
+~~- Write FTP honeypot~~ Done!
 - Write honeypots for various databases
 - Write honeypot for SMB
 - Write the password util

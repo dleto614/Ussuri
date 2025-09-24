@@ -59,7 +59,7 @@ func generatePrivateKey(filename string) error {
 	}
 	defer file.Close()
 
-	log.Println("Generated private key:", filename)
+	log.Println("[*] Generated private key:", filename)
 
 	return pem.Encode(file, privateKeyPEM)
 }
@@ -89,7 +89,7 @@ func generatePublicKey(privateKeyFilename, publicKeyFilename string) error {
 
 	}
 
-	log.Println("Generated public key:", publicKeyFilename)
+	log.Println("[*] Generated public key:", publicKeyFilename)
 	return os.WriteFile(publicKeyFilename, ssh.MarshalAuthorizedKey(publicKey), 0644)
 }
 
@@ -107,7 +107,7 @@ func chkYaml(file *string) Config {
 		}
 	}
 
-	log.Println("Config file loaded")
+	log.Println("[*] Config file loaded")
 	return config
 }
 
@@ -121,45 +121,45 @@ func chkKeys(private string, public string) ssh.Signer {
 	// I guess this logic checks if the keys exist or not without regenerating if private and public keys do exist.
 	if privateKeyErr != nil || publicKeyErr != nil || privateKeyFileInfo == nil || publicKeyFileInfo == nil {
 
-		log.Println("Generating keys...")
+		log.Println("[*] Generating keys...")
 
 		err := generatePrivateKey(private)
 		if err != nil {
-			log.Fatal("Error generating private key:", err)
+			log.Fatal("[!] Error generating private key:", err)
 
 		} else {
-			log.Println("Private key generated")
+			log.Println("[*]Private key generated")
 
 		}
 
 		err = generatePublicKey(private, public)
 		if err != nil {
-			log.Fatal("Error generating public key:", err)
+			log.Fatal("[!] Error generating public key:", err)
 
 		} else {
-			log.Println("Public key generated")
+			log.Println("[*] Public key generated")
 
 		}
-		log.Println("Keys generated")
+		log.Println("[*] Keys generated")
 	}
 
 	privateKeyData, err := os.ReadFile(private)
 	if err != nil {
-		log.Fatal("Error reading private key:", err)
+		log.Fatal("[!] Error reading private key:", err)
 
 	} else {
-		log.Println("Private key read")
+		log.Println("[*] Private key read")
 	}
 
 	privateKey, err := ssh.ParsePrivateKey(privateKeyData)
 	if err != nil {
-		log.Fatal("Error parse private key:", err)
+		log.Fatal("[!] Error parse private key:", err)
 
 	} else {
-		log.Println("Private key parsed")
+		log.Println("[*] Private key parsed")
 	}
 
-	log.Println("Keys checked")
+	log.Println("[*] Keys checked")
 	return privateKey
 }
 
@@ -206,7 +206,7 @@ func setLogger(logfile *string) (*os.File, error) {
 	logfd, err = os.OpenFile(*logfile, os.O_APPEND|os.O_RDWR|os.O_CREATE, 0644) // Create and open file to append data
 
 	if err != nil {
-		log.Fatal("Error opening file:", err)
+		log.Fatal("[!] Error opening file:", err)
 
 	}
 
@@ -217,7 +217,7 @@ func setLogger(logfile *string) (*os.File, error) {
 }
 
 func writeAcceptError(error error, remoteAddr string) {
-	log.Println("Error:", error, remoteAddr)
+	log.Println("[!] Error:", error, remoteAddr)
 
 }
 
@@ -236,14 +236,14 @@ func writeJson(outputfile *string, remoteAddr string, clientVersion string, user
 	})
 
 	if err != nil {
-		log.Fatal("Error creating json:", err)
+		log.Fatal("[!] Error creating json:", err)
 
 	}
 
 	file, err := os.OpenFile(*outputfile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) // Create and open file to append data
 
 	if err != nil {
-		log.Fatal("Error opening file:", err)
+		log.Fatal("[!] Error opening file:", err)
 
 	}
 	defer file.Close()
@@ -252,11 +252,11 @@ func writeJson(outputfile *string, remoteAddr string, clientVersion string, user
 
 	_, err = file.Write(data)
 	if err != nil {
-		log.Fatal("Error writing json:", err)
+		log.Fatal("[!] Error writing json:", err)
 
 	}
 
-	log.Println("Json written to:", *outputfile)
+	log.Println("[*] Logged json to:", *outputfile)
 }
 
 // Handle incoming connections.
@@ -285,21 +285,21 @@ func main() {
 	// Yaml is required??? Might need to change this some other time
 	// since techically we can do without it and just set defaults in chkConfig() function.
 	if !chkFlag("f") {
-		log.Println("No config file specified")
+		log.Println("[!] No config file specified")
 		usage()
 		os.Exit(1)
 
 	}
 
 	if chkFlag("l") {
-		fmt.Println("Logging to:", *logfile)
+		fmt.Println("[*] Logging to:", *logfile)
 		logfd, err = setLogger(logfile)
 
 	}
 
 	// Pretty sure this is wrong. I don't remember what and why I did this.
 	if err != nil {
-		log.Fatal("Error opening log file:", err)
+		log.Fatal("[!] Error opening log file:", err)
 	}
 
 	defer logfd.Close()
@@ -309,7 +309,7 @@ func main() {
 
 	serverConfig := &ssh.ServerConfig{
 		PasswordCallback: func(conn ssh.ConnMetadata, password []byte) (*ssh.Permissions, error) {
-			log.Println(conn.RemoteAddr(), string(conn.ClientVersion()), conn.User(), string(password))
+			log.Println("[*]", conn.RemoteAddr(), string(conn.ClientVersion()), conn.User(), string(password))
 			time.Sleep(100 * time.Millisecond)
 
 			if chkFlag("o") {
@@ -328,19 +328,19 @@ func main() {
 
 	listener, err := net.Listen("tcp", config.SERVER.Address+":"+config.SERVER.Port)
 	if err != nil {
-		log.Fatal("Failed to listen:", err)
+		log.Fatal("[!] Failed to listen:", err)
 
 	}
 	defer listener.Close()
 
-	log.Println("Listening for connections...")
+	log.Println("[*] Listening for connections...")
 
 	// Accept connections and handle them.
 	// This is an infinite loop that will run until the program is killed.
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Println("Failed to accept:", err)
+			log.Println("[!] Failed to accept:", err)
 			writeAcceptError(err, conn.RemoteAddr().String())
 
 		} else {
