@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="Image/ussuri-bear.jpg" alt="Photo" width="400">
+</p>
+
 # Ussuri: Collection of honeypots and related utils
 
 ### Background:
